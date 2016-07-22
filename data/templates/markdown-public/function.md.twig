@@ -1,0 +1,52 @@
+### {{ function.name }}
+
+{{ function.summary|raw }}
+
+{# Function signature #}
+```php
+{{ function.name }}( {% for argument in function.arguments %}
+{{- argument.types ? argument.types|join('|')~' ' }}
+{{- argument.byReference ? '&' }}
+{{- argument.name }}{{ argument.default ? ' = '~argument.default }}
+{%- if not loop.last %}, {% endif %}
+{%- endfor %} )
+{{- function.response.types ? ': '~function.response.types|join('|') }}
+```
+
+{{ function.description|raw }}
+
+{% if function.deprecated %}* **Warning:** this function is **deprecated**. This means that this function will likely be removed in a future version.
+{% endif %}
+
+{% if function.arguments is not empty %}
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+{% for argument in function.arguments %}
+| `{{ argument.name }}` | **{{ argument.types ? argument.types|join('&#124;')|raw }}** | {{ argument.description|replace({'|': '&#124;'})|raw }} |
+{% endfor %}
+
+{% endif %}{# function.arguments is not empty #}
+
+{% if function.response.description %}
+**Return Value:**
+
+{{ function.response.description|raw }}
+
+{% endif %}
+
+{% if function.tags.see is not empty or function.tags.link is not empty %}
+**See Also:**
+
+{% for see in function.tags.see %}
+* {{ see.reference }} {% if see.description %}- {{ see.description|raw }}{% endif %}
+{% endfor %}
+{% for link in function.tags.link %}
+* {{ link.link }} {% if link.description and link.description != link.link %}- {{ link.description|raw }}{% endif %}
+{% endfor %}
+
+{% endif %}{# function.tags.see || function.tags.link #}
+
+---
+
