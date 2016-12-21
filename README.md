@@ -13,7 +13,7 @@ Example of documentation generated with this template: https://github.com/cvuori
 Install with composer:
 
 ```bash
-composer require cvuorinen/phpdoc-markdown-public
+composer require phwoolcon/phpdoc-markdown-public
 ```
 
 ## Usage

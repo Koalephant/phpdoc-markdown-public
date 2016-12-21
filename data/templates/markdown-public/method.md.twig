@@ -25,7 +25,7 @@
 | Parameter | Type | Description |
 |-----------|------|-------------|
 {% for argument in method.arguments %}
-| `{{ argument.name }}` | **{{ argument.types ? argument.types|join('&#124;')|raw }}** | {{ argument.description|replace({'|': '&#124;'})|raw }} |
+| `{{ argument.name }}` | **{{ argument.types ? (argument.types|join('&#124;')|raw ?: 'mixed') }}** | {{ argument.description|replace({'|': '&#124;'})|raw ?: '&nbsp;' }} |
 {% endfor %}
 
 {% endif %}{# method.arguments is not empty #}

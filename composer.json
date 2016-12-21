@@ -1,17 +1,25 @@
 {
-    "name": "cvuorinen/phpdoc-markdown-public",
+    "name": "phwoolcon/phpdoc-markdown-public",
     "description": "phpDocumentor template that generates Markdown documentation of the public API",
     "keywords" : [ "PHPDoc", "phpDocumentor", "Documentation", "Markdown" ],
-    "homepage" : "https://github.com/cvuorinen/phpdoc-markdown-public",
+    "homepage" : "https://github.com/phwoolcon/phpdoc-markdown-public",
     "license": "MIT",
     "authors": [
         {
             "name": "Carl Vuorinen",
             "email": "carl.vuorinen@gmail.com"
+        },
+        {
+            "name": "Roman Lakhtadyr",
+            "email": "roman@homefs.biz"
+        },
+        {
+            "name": "Christopher CHEN",
+            "email": "fishdrowned@gmail.com"
         }
     ],
     "require": {
-        "phpdocumentor/phpdocumentor": "~2.8.0"
+        "phpdocumentor/phpdocumentor": "~2.8"
     },
     "autoload": {
         "psr-4": {
