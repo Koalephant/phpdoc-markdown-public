@@ -1,31 +1,42 @@
-### {{ method.name }}
+<a name="{{ anchorLink(method, true) }}">&nbsp;</a>
 
-{{ method.summary|raw }}
+### {% if method.deprecated %}<s>{% endif %}{{ method.name }}{% if method.deprecated %}</s> <kbd style="color:red;">DEPRECATED</kbd>{% endif %}{% if method.static %} <kbd>static</kbd>{% endif %}{% if class.abstract %} <kbd>abstract</kbd>{% endif %}{% if method.magic %} <kbd>magic</kbd>{% endif %}
 
 {# Method signature #}
 ```php
 {{ class.name }}::{{ method.name }}( {% for argument in method.arguments %}
 {{- argument.types ? argument.types|join('|')~' ' }}
 {{- argument.byReference ? '&' }}
-{{- argument.name }}{{ argument.default ? ' = '~argument.default }}
+{{- argument.name }}{{ (argument.default ? ' = '~argument.default)|raw }}
 {%- if not loop.last %}, {% endif %}
 {%- endfor %} )
-{{- method.response.types ? ': '~method.response.types|join('|') }}
+{{- (method.response.types ? ': '~method.response.types|join('|'))|raw }}
 ```
 
-{{ method.description|raw }}
+{{ formatSummary(method.summary)|raw }}
 
-{% if method.static %}* This method is **static**.{% endif %}
+{{ formatSummary(method.description)|raw }}
+
 {% if method.deprecated %}* **Warning:** this method is **deprecated**. This means that this method will likely be removed in a future version.
+{% endif %}
+
+{% if method.inherits %}
+* **Inherits** {{ method.inherits }}
+{% endif %}
+{% if method.implementsInterface %}
+* **Implements** {{ method.implementsInterface }}
+{% endif %}
+{% if method.overrides %}
+* **Overrides** {{ method.overrides }}
 {% endif %}
 
 {% if method.arguments is not empty %}
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Name | Type | Description |
+|------|------|-------------|
 {% for argument in method.arguments %}
-| `{{ argument.name }}` | **{{ argument.types ? (argument.types|join('&#124;')|raw ?: 'mixed') }}** | {{ argument.description|replace({'|': '&#124;'})|raw ?: '&nbsp;' }} |
+| {{ argument.name }} | **{{ argument.types ? (argument.types|join('&#124;')|raw ?: 'mixed') }}** | {{ argument.description|replace({'|': '&#124;'})|raw ?: '&nbsp;' }} |
 {% endfor %}
 
 {% endif %}{# method.arguments is not empty #}
@@ -33,7 +44,7 @@
 {% if method.response.description %}
 **Return Value:**
 
-{{ method.response.description|raw }}
+{{ formatSummary(method.response.description)|raw }}
 
 {% endif %}
 

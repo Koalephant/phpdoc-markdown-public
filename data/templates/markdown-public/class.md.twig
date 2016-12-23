@@ -1,13 +1,14 @@
-## {{ class.name }}
+<a name="{{ anchorLink(class, true) }}">&nbsp;</a>
+
+## {{ class.FullyQualifiedStructuralElementName[1:] }}{% if class.deprecated %}</s> <kbd style="color:red;">DEPRECATED</kbd>{% endif %}{% if class.abstract %} <kbd>abstract</kbd>{% endif %}
 
 {{ class.summary|raw }}
 
 {{ class.description|raw }}
 
-* Full name: {{ class.FullyQualifiedStructuralElementName }}
-{% if class.parent %}* Parent class: {{ class.parent.FullyQualifiedStructuralElementName }}
+{% if class.parent and class.parent.FullyQualifiedStructuralElementName %}* Parent class: {{ class.parent.FullyQualifiedStructuralElementName[1:] }}
 {% endif %}
-{% if class.interfaces is not empty %}* This class implements: {{ class.interfaces|join(', ')|raw }}
+{% if class.interfaces is not empty %}* **Implements**: {{ class.interfaces|join(', ')|raw }}
 {% endif %}
 {% if class.deprecated %}* **Warning:** this class is **deprecated**. This means that this class will likely be removed in a future version.
 {% endif %}

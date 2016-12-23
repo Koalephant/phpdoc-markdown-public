@@ -2,6 +2,9 @@
 
 namespace Cvuorinen\PhpdocMarkdownPublic\Extension;
 
+use phpDocumentor\Descriptor\DescriptorAbstract as Descriptor;
+use phpDocumentor\Descriptor\FunctionDescriptor;
+use phpDocumentor\Descriptor\MethodDescriptor;
 use Twig_Extension;
 use Twig_SimpleFunction;
 
@@ -24,7 +27,7 @@ class TwigMarkdownAnchorLink extends Twig_Extension
      *
      * @var array
      */
-    private static $links = array();
+    private static $links = [];
 
     /**
      * {@inheritdoc}
@@ -39,26 +42,34 @@ class TwigMarkdownAnchorLink extends Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new Twig_SimpleFunction('anchorLink', array($this, 'createAnchorLink'))
-        );
+        return [
+            new Twig_SimpleFunction('anchorLink', [$this, 'createAnchorLink']),
+        ];
     }
 
     /**
-     * @param string $title
-     *
+     * @param Descriptor $subject
+     * @param bool               $urlOnly
      * @return string
      */
-    public function createAnchorLink($title)
+    public function createAnchorLink(Descriptor $subject, $urlOnly = false)
     {
-        $anchor = strtolower($title);
+        if (!isset($subject->{'anchorLink'})) {
+            if ($subject instanceof MethodDescriptor || $subject instanceof FunctionDescriptor) {
+                $title = $subject->getName();
+            } else {
+                $title = trim($subject->getFullyQualifiedStructuralElementName(), '\\/');
+            }
+            $anchor = str_replace(['/', '\\', '_'], ['-', '-', '-'], strtolower($title));
 
-        // Check if we already have link to an anchor with the same name, and add count suffix
-        $linkCounts = array_count_values(self::$links);
-        $anchorSuffix = array_key_exists($anchor, $linkCounts)
-            ? '-' . $linkCounts[$anchor] : '';
-        array_push(self::$links, $anchor);
+            // Check if we already have link to an anchor with the same name, and add count suffix
+            $linkCounts = array_count_values(self::$links);
+            $anchorSuffix = array_key_exists($anchor, $linkCounts) ? '-' . $linkCounts[$anchor] : '';
+            array_push(self::$links, $anchor);
 
-        return sprintf("[%s](%s)", $title, '#' . $anchor . $anchorSuffix);
+            $subject->{'anchorUrl'} = $anchor . $anchorSuffix;
+            $subject->{'anchorLink'} = sprintf("[%s](%s)", $title, '#' . $subject->{'anchorUrl'});
+        }
+        return $urlOnly ? $subject->{'anchorUrl'} : $subject->{'anchorLink'};
     }
 }

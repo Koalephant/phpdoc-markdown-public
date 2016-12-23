@@ -3,9 +3,7 @@
 {% include 'toc.md.twig' %}
 
 {% for class in project.indexes.classes|sort_asc %}
-{% if not class.abstract %}
 {% include 'class.md.twig' %}
-{% endif %}
 {% endfor %}
 
 {% for function in project.indexes.functions|sort_asc %}

@@ -1,19 +1,21 @@
-### {{ function.name }}
+<a name="{{ anchorLink(function, true) }}">&nbsp;</a>
 
-{{ function.summary|raw }}
+### {% if function.deprecated %}<s>{% endif %}{{ function.name }}{% if function.deprecated %}</s> <kbd style="color:red;">DEPRECATED</kbd>{% endif %}
 
 {# Function signature #}
 ```php
 {{ function.name }}( {% for argument in function.arguments %}
 {{- argument.types ? argument.types|join('|')~' ' }}
 {{- argument.byReference ? '&' }}
-{{- argument.name }}{{ argument.default ? ' = '~argument.default }}
+{{- argument.name }}{{ (argument.default ? ' = '~argument.default)|raw }}
 {%- if not loop.last %}, {% endif %}
 {%- endfor %} )
-{{- function.response.types ? ': '~function.response.types|join('|') }}
+{{- (function.response.types ? ': '~function.response.types|join('|'))|raw }}
 ```
 
-{{ function.description|raw }}
+{{ formatSummary(function.summary)|raw }}
+
+{{ formatSummary(function.description)|raw }}
 
 {% if function.deprecated %}* **Warning:** this function is **deprecated**. This means that this function will likely be removed in a future version.
 {% endif %}
@@ -21,10 +23,10 @@
 {% if function.arguments is not empty %}
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Name | Type | Description |
+|------|------|-------------|
 {% for argument in function.arguments %}
-| `{{ argument.name }}` | **{{ argument.types ? argument.types|join('&#124;')|raw }}** | {{ argument.description|replace({'|': '&#124;'})|raw }} |
+| {{ argument.name }} | **{{ argument.types ? (argument.types|join('&#124;')|raw ?: 'mixed') }}** | {{ argument.description|replace({'|': '&#124;'})|raw ?: '&nbsp;' }} |
 {% endfor %}
 
 {% endif %}{# function.arguments is not empty #}
@@ -32,7 +34,7 @@
 {% if function.response.description %}
 **Return Value:**
 
-{{ function.response.description|raw }}
+{{ formatSummary(function.response.description)|raw }}
 
 {% endif %}
 

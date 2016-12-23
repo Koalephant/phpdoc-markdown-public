@@ -1,10 +1,16 @@
 ## Table of Contents
 
+Classes:
+
 {% for class in project.indexes.classes|sort_asc %}
-{% if not class.abstract %}
-* {{ anchorLink(class.name) }}
+* {{ anchorLink(class) }}
 {% for method in publicMethods(class) %}
-    * {{ anchorLink(method.name) }}
+    * {{ anchorLink(method) }}
 {% endfor %}
-{% endif %}
+{% endfor %}
+
+Functions:
+
+{% for function in project.indexes.functions|sort_asc %}
+* {{ anchorLink(function) }}
 {% endfor %}
